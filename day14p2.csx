@@ -1,5 +1,3 @@
-using System.Numerics;
-
 string input = @"NNCB
 
 CH -> B
