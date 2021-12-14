@@ -27,15 +27,15 @@ var instructions = split[1].Split('\n').Select(s => s.Split(" -> ")).ToArray();
 var pairs = Enumerable.Range(0, start.Length - 1)
     .Select(i => start.Substring(i, 2))
     .GroupBy(i => i)
-    .ToDictionary(g => g.Key, g => (BigInteger)g.Count());
-var counts = new BigInteger[26];
+    .ToDictionary(g => g.Key, g => (long)g.Count());
+var counts = new long[26];
 foreach (var ch in start) counts[ch - 'A']++;
 
 for (var i = 0; i < 40; ++i)
 {
     WriteLine($"Step: {i + 1}");
 
-    var next = instructions.Select(x => x[0]).GroupBy(x => x).ToDictionary(g => g.Key, _ => (BigInteger)0);
+    var next = instructions.Select(x => x[0]).GroupBy(x => x).ToDictionary(g => g.Key, _ => (long)0);
     foreach (var pair in pairs)
     {
         if (pair.Value == 0) continue;
