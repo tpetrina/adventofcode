@@ -49,7 +49,7 @@ var reports = input
             .Select(line => line.Split(",").Select(int.Parse).ToArray())
             .Select(x => new Point(x[0], x[1], x[2]))
             .ToArray();
-        return (scanner, points);
+        return (scanner, points, scanners: new List<Point> { new Point(0, 0, 0) });
     })
     .ToArray();
 
@@ -95,6 +95,7 @@ void Solve()
 
                     WriteLine($"  Before ({i}): {reports[i].points.Length}");
                     reports[i].points = new HashSet<Point>(reports[i].points.Union(reports[j].points.Select(p => inverter(ps + p)))).ToArray();
+                    reports[i].scanners.AddRange(reports[j].scanners.Select(s => inverter(ps + s)));
                     WriteLine($"  After ({i}): {reports[i].points.Length}");
                     WriteLine();
 
@@ -120,8 +121,15 @@ void Solve()
         }
     }
 
-    File.WriteAllLines("beacons.txt", beacons.Select(x => x.ToString()));
+    WriteLine($"Scanners: {string.Join(", ", reports[0].scanners)}");
+    var max = reports[0].scanners
+        .Select(s => reports[0].scanners.Select(s2 => dist(s, s2)).Max())
+        .Max();
+    WriteLine($"Max: {max}");
 }
+
+long dist(Point p, Point q)
+    => Math.Abs(p.x - q.x) + Math.Abs(p.y - q.y) + Math.Abs(p.z - q.z);
 
 (bool isMatch, Point ps, Func<Point, Point> inverter) Check(IEnumerable<Point> points, IEnumerable<Point> points2)
 {
